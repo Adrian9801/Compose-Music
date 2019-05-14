@@ -22,7 +22,7 @@ const readFile = (filepath: string) => {
   });
 };
 
-readFile("C:\\Users\\adri-\\OneDrive\\Escritorio\\Dua.wav").then((buffer) => {
+readFile("./S1/IDragons.wav").then((buffer) => {
   return WavDecoder.decode(buffer);
 }).then(function(audioData) {
   console.log("ampliando 30%");
@@ -51,7 +51,7 @@ readFile("C:\\Users\\adri-\\OneDrive\\Escritorio\\Dua.wav").then((buffer) => {
 
   console.log("writing...");
   WavEncoder.encode(audioData).then((buffer: any) => {
-    fs.writeFileSync("C:\\Users\\adri-\\OneDrive\\Escritorio\\Dual.wav", new Buffer(buffer));
+    fs.writeFileSync("./GenSong/NewSong.wav", new Buffer(buffer));
   });
 
 });

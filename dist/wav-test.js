@@ -28,7 +28,7 @@ var readFile = function (filepath) {
         });
     });
 };
-readFile("C:\\Users\\adri-\\OneDrive\\Escritorio\\Dua.wav").then(function (buffer) {
+readFile("./S1/IDragons.wav").then(function (buffer) {
     return WavDecoder.decode(buffer);
 }).then(function (audioData) {
     console.log("ampliando 30%");
@@ -51,7 +51,7 @@ readFile("C:\\Users\\adri-\\OneDrive\\Escritorio\\Dua.wav").then(function (buffe
     }
     console.log("writing...");
     WavEncoder.encode(audioData).then(function (buffer) {
-        fs.writeFileSync("C:\\Users\\adri-\\OneDrive\\Escritorio\\Dual.wav", new Buffer(buffer));
+        fs.writeFileSync("./GenSong/NewSong.wav", new Buffer(buffer));
     });
 });
 //# sourceMappingURL=wav-test.js.map

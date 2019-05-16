@@ -11,6 +11,8 @@ import * as WavEncoder from 'wav-encoder';
 // import { default as ft } from 'fourier-transform';
 import * as WavDecoder from 'wav-decoder';
 
+import { controller } from './controller';
+
 const readFile = (filepath: string) => {
   return new Promise((resolve, reject) => {
     fs.readFile(filepath, (err, buffer) => {
@@ -22,10 +24,10 @@ const readFile = (filepath: string) => {
   });
 };
 
-readFile("./S1/IDragons.wav").then((buffer) => {
+readFile("./S1/SW.wav").then((buffer) => {
   return WavDecoder.decode(buffer);
 }).then(function(audioData) {
-  
+  var cont = new controller(audioData, audioData);
 
   console.log("writing...");
   WavEncoder.encode(audioData).then((buffer: any) => {

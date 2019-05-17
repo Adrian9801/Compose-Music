@@ -1,3 +1,5 @@
+import { constants } from "./Constants";
+
 export class genetic{
         private newPopulation: number[];
         private modelo: number[][];
@@ -11,15 +13,20 @@ export class genetic{
     private makeFirstPopulaton(pS1: number[][]){
         var maxRandom: number = 0;
         var minRandom: number = 0;
+        var cantFig: number = 0;
         for(var index: number = 0; pS1.length > index; index++){
             for(var indexCromosoma: number = 0; pS1[index].length-1 > indexCromosoma; indexCromosoma++){
-                var cantFig: number = Math.trunc(pS1[index][indexCromosoma]*pS1[index][5]);
-                maxRandom = Math.trunc(pS1[index][indexCromosoma]*65535 + maxRandom);
-                for(var indice: number = 0; cantFig > indice; indice++){
-                    this.newPopulation.push(Math.trunc(Math.random()*(maxRandom - minRandom) + minRandom));
-                }
+                cantFig = Math.trunc(pS1[index][indexCromosoma]*pS1[index][constants.POS_TOTAL]);
+                maxRandom = Math.trunc(pS1[index][indexCromosoma]*constants.LENGTH_CROMOSOMA + maxRandom);
+                this.generatePopulation(cantFig, minRandom, maxRandom);
                 minRandom = maxRandom;
             }
+        }
+    }
+
+    private generatePopulation(pCantFig: number, pMinRandom: number, pMaxRandom: number){
+        for(var index: number = 0; pCantFig > index; index++){
+            this.newPopulation.push(Math.trunc(Math.random()*(pMaxRandom - pMinRandom) + pMinRandom));
         }
     }
 
@@ -31,14 +38,14 @@ export class genetic{
         var random: number = 0;
         for (var index = 0; index < pPopulation; index++) {
             var kid: number;
-            random = Math.floor(Math.random() *16);
+            random = Math.floor(Math.random()*constants.BITS_CROMOSOMA);
             pFather = pFather >>(random);
             pFather = pFather <<(random);
 
-            pMother = pMother <<(31-random);
-            pMother = pMother >>(31-random);
+            pMother = pMother <<(constants.BITS_NUMBER-random);
+            pMother = pMother >>(constants.BITS_NUMBER-random);
             kid = pMother&pFather;
-            if ((Math.random() * 100) < 6.35) {
+            if ((Math.random() * constants.TOTAL_PORCENT) < constants.MUTATION) {
                 kid = this.mutation(kid);
             }
             this.newPopulation.push(kid);
@@ -47,9 +54,13 @@ export class genetic{
 
     private mutation(pKid: number): number {
         var randomMutation: number = 0;
-        randomMutation = Math.floor(Math.random() * 16);
+        randomMutation = Math.floor(Math.random()*constants.BITS_CROMOSOMA);
         pKid = pKid ^ (Math.pow(2,randomMutation));
         return pKid;
     }
     
+    public getNewPopulation(): number[]{
+        return this.newPopulation;
+    }
+
 }

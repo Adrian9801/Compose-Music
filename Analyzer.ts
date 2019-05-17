@@ -93,7 +93,7 @@ export class analyzer{
     var pos: number = 0;
     var height: number = 2;
     var shape:number = 0;
-    result[0] = [0,0,0,0,0];
+    result[0] = [0,0,0,0,0,0];
     for(var index:number = 0; index < audioLength; index++){
         if(pAudioData[index+1] < 0){
             height = 3;
@@ -111,13 +111,14 @@ export class analyzer{
         result[pos][shape] +=1;
         if((index+1) % constants.TAMGEN == 0){
             pos++;
-            result[pos] = [0,0,0,0,0];
+            result[pos] = [0,0,0,0,0,0];
         }    
     }
     var total: number = 0;
     for(var index: number = 0; index < result.length; index++){
         total = result[index][0] + result[index][1] + result[index][2] + result[index][3] + result[index][4];
         result[index] = this.calculatePorcent(result[index], total);
+        result[index][5] = total;
     }
     return result;
 }
@@ -130,8 +131,8 @@ export class analyzer{
     }
 
     private calculatePorcent(pResult: number[], pTotal: number): number[]{
-        for(let index: number = 0; index < pResult.length; index++){
-            pResult[index] = (pResult[index]/pTotal)*100;
+        for(let index: number = 0; index < pResult.length-1; index++){
+            pResult[index] = pResult[index]/pTotal;
         }
         return pResult;
     }

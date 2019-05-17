@@ -86,7 +86,7 @@ var analyzer = /** @class */ (function () {
         var pos = 0;
         var height = 2;
         var shape = 0;
-        result[0] = [0, 0, 0, 0, 0];
+        result[0] = [0, 0, 0, 0, 0, 0];
         for (var index = 0; index < audioLength; index++) {
             if (pAudioData[index + 1] < 0) {
                 height = 3;
@@ -104,13 +104,14 @@ var analyzer = /** @class */ (function () {
             result[pos][shape] += 1;
             if ((index + 1) % Constants_1.constants.TAMGEN == 0) {
                 pos++;
-                result[pos] = [0, 0, 0, 0, 0];
+                result[pos] = [0, 0, 0, 0, 0, 0];
             }
         }
         var total = 0;
         for (var index = 0; index < result.length; index++) {
             total = result[index][0] + result[index][1] + result[index][2] + result[index][3] + result[index][4];
             result[index] = this.calculatePorcent(result[index], total);
+            result[index][5] = total;
         }
         return result;
     };
@@ -121,8 +122,8 @@ var analyzer = /** @class */ (function () {
         return pSigno;
     };
     analyzer.prototype.calculatePorcent = function (pResult, pTotal) {
-        for (var index = 0; index < pResult.length; index++) {
-            pResult[index] = (pResult[index] / pTotal) * 100;
+        for (var index = 0; index < pResult.length - 1; index++) {
+            pResult[index] = pResult[index] / pTotal;
         }
         return pResult;
     };

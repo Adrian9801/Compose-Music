@@ -28,7 +28,13 @@ readFile("./S1/SW.wav").then((buffer) => {
   return WavDecoder.decode(buffer);
 }).then(function(audioData) {
   var cont = new controller(audioData, audioData);
-
+  var num: number = 239;//11101111
+  //num = num <<(31-4);
+  //num = num >>(31-4);
+  num = num ^(4);
+  //00001111
+  //11100000
+  console.log(num)
   console.log("writing...");
   WavEncoder.encode(audioData).then((buffer: any) => {
     fs.writeFileSync("./GenSong/NewSong.wav", new Buffer(buffer));

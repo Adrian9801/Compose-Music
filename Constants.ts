@@ -1,3 +1,3 @@
 export class constants{
-    public static TAMGEN: number = 65536;
+    public static TAMGEN: number = 16384;
 }

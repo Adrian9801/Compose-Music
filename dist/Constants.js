@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var constants = /** @class */ (function () {
     function constants() {
     }
-    constants.TAMGEN = 65536;
+    constants.TAMGEN = 16384;
     return constants;
 }());
 exports.constants = constants;

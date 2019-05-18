@@ -5,8 +5,8 @@ export class constants{
     public static TERRACE: number = 2;
     public static VALLEY: number = 3;
     public static SILENCE: number = 4;
-    public static POS_TOTAL: number = 4;
-    public static PORCENT_FLAT: number = 4;
+    public static POS_TOTAL: number = 5;
+    public static PORCENT_FLAT: number = 0.1;
     public static LENGTH_CROMOSOMA: number = 65535;
     public static MUTATION: number = 6.35;
     public static BITS_CROMOSOMA: number = 16;

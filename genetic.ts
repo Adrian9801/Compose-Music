@@ -2,19 +2,22 @@ import { constants } from "./Constants";
 
 export class genetic {
     private newPopulation: number[][];
+    private actualPopulation: number[][];
     private modelo: number[][];
     private pivotInsert: number[];
     private totalShapeZone: number[];
+    private optimalDistance: number;
 
-    public constructor(pS1: number[][], pS2: number[][]) {
-        this.newPopulation = [];
+    public constructor(pS2: number[][]) {
+        this.newPopulation = [[],[],[],[],[]];
         this.pivotInsert = [];
+        this.actualPopulation = [];
         this.totalShapeZone = [];
         this.modelo = pS2;
-        this.makeFirstPopulaton(pS1[0]);
+        this.optimalDistance = 0; 
     }
 
-    private makeFirstPopulaton(pS1: number[]) {
+    public makeFirstPopulaton(pS1: number[], pZone:number) {
         var maxRandom: number = 0;
         var minRandom: number = 0;
         var cantFig: number = 0;
@@ -25,24 +28,71 @@ export class genetic {
             this.totalShapeZone.push(pS1[constants.POS_TOTAL]);
             this.generatePopulation(cantFig, minRandom, maxRandom, index);
             minRandom = maxRandom;
+            this.optimalDistance += Math.abs(pS1[index] - this.modelo[pZone][index]);
         }
+        for(var i: number = 0; constants.PORCENT_APROX <= this.optimalDistance; i++){
+            for(var index: number = 0; constants.POS_TOTAL > index; index++){
+                this.fitness(pZone,index);
+            }
+            this.getDistanceNewPopulation(pZone);
+            if(this.getDistanceNewPopulation(pZone) < this.optimalDistance){
+                this.actualPopulation = Object.assign([],this.newPopulation);
+                this.optimalDistance = this.getDistanceNewPopulation(pZone);
+            }
+            this.newPopulation = [[],[],[],[],[]];
+        }
+        var cant: number = this.actualPopulation[0].length+this.actualPopulation[1].length+this.actualPopulation[2].length+
+        this.actualPopulation[3].length+this.actualPopulation[4].length;
+        console.log(this.actualPopulation[0].length/cant);
+        console.log(this.actualPopulation[1].length/cant);
+        console.log(this.actualPopulation[2].length/cant);
+        console.log(this.actualPopulation[3].length/cant);
+        console.log(this.actualPopulation[4].length/cant);
+        console.log(cant);
     }
 
     private generatePopulation(pCantFig: number, pMinRandom: number, pMaxRandom: number, pIndexIndiv: number) {
+        this.actualPopulation[pIndexIndiv] = [];
         for (var index: number = 0; pCantFig > index; index++) {
-            this.newPopulation[pIndexIndiv].push(Math.trunc(Math.random() * (pMaxRandom - pMinRandom) + pMinRandom));
+            this.actualPopulation[pIndexIndiv].push(Math.trunc(Math.random() * (pMaxRandom - pMinRandom) + pMinRandom));
         }
     }
 
-    private fitness(pZone: number) {
-        var indiviAccept: number[][] = [];
-        var shapePorcent: number = 0;
-        for (var index: number = 0; index < this.newPopulation[pZone].length; index++) {
-            shapePorcent = this.newPopulation[pZone].length / this.totalShapeZone[pZone];
-            if (Math.random() <= this.modelo[pZone][index] / shapePorcent) {
-                indiviAccept[pZone].push(this.newPopulation[pZone][index]);
+    public clear(){
+        this.newPopulation = [[],[],[],[],[]];
+        this.pivotInsert = [];
+        this.actualPopulation = [];
+        this.totalShapeZone = [];
+    }
+
+    private getDistanceNewPopulation(pZone: number): number{
+        var cant: number = this.newPopulation[constants.ASCENT].length+this.newPopulation[constants.DESCENT].length+
+        this.newPopulation[constants.TERRACE].length+this.newPopulation[constants.VALLEY].length+this.newPopulation[constants.SILENCE].length;
+        var distance = Math.abs((this.newPopulation[constants.ASCENT].length/cant) - this.modelo[pZone][constants.ASCENT])+
+        Math.abs((this.newPopulation[constants.DESCENT].length/cant) - this.modelo[pZone][constants.DESCENT])
+        +Math.abs((this.newPopulation[constants.TERRACE].length/cant) - this.modelo[pZone][constants.TERRACE])+ 
+        Math.abs((this.newPopulation[constants.VALLEY].length/cant) - this.modelo[pZone][constants.VALLEY])
+        +Math.abs((this.newPopulation[constants.SILENCE].length/cant) - this.modelo[pZone][constants.SILENCE]);
+        return distance;
+    }
+
+    private fitness(pZone: number, pShape: number) {
+        var indiviAccept: number[] = [];
+        var shapePorcent: number = this.actualPopulation[pShape].length / this.totalShapeZone[pShape];
+        var ponderate: number = this.modelo[pZone][pShape] / shapePorcent;
+        var numHijos: number = 0;
+        if(ponderate > 1){
+            numHijos = (ponderate-1)*this.actualPopulation[pShape].length;
+        }
+        for (var index: number = 0; index < this.actualPopulation[pShape].length; index++) {
+            if (Math.random() <= ponderate) {
+                indiviAccept.push(this.actualPopulation[pShape][index]);
             }
         }
+        var father: number = Math.floor(Math.random()*indiviAccept.length);
+        var mother: number = Math.floor(Math.random()*indiviAccept.length);
+        numHijos += indiviAccept.length;
+        this.reproduction(indiviAccept[father], indiviAccept[mother], numHijos);
     }
 
     private reproduction(pFather: number, pMother: number, pPopulation: number) {

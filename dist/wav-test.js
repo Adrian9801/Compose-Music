@@ -31,18 +31,15 @@ var readFile = function (filepath) {
 };
 readFile("./S1/SW.wav").then(function (buffer) {
     return WavDecoder.decode(buffer);
-}).then(function (audioData) {
-    var cont = new controller_1.controller(audioData, audioData);
-    var num = 239; //11101111
-    //num = num <<(31-4);
-    //num = num >>(31-4);
-    num = num ^ (4);
-    //00001111
-    //11100000
-    console.log(num);
-    console.log("writing...");
-    WavEncoder.encode(audioData).then(function (buffer) {
-        fs.writeFileSync("./GenSong/NewSong.wav", new Buffer(buffer));
+}).then(function (audioData1) {
+    readFile("./S2/DragonS2.wav").then(function (buffer) {
+        return WavDecoder.decode(buffer);
+    }).then(function (audioData2) {
+        var cont = new controller_1.controller(audioData1, audioData2);
+        console.log("writing...");
+        WavEncoder.encode(audioData2).then(function (buffer) {
+            fs.writeFileSync("./GenSong/NewSong.wav", new Buffer(buffer));
+        });
     });
 });
 //# sourceMappingURL=wav-test.js.map

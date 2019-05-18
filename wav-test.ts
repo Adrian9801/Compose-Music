@@ -23,14 +23,20 @@ const readFile = (filepath: string) => {
     });
   });
 };
-
 readFile("./S1/SW.wav").then((buffer) => {
   return WavDecoder.decode(buffer);
-}).then(function(audioData) {
-  var cont = new controller(audioData, audioData);
-  console.log("writing...");
-  WavEncoder.encode(audioData).then((buffer: any) => {
-    fs.writeFileSync("./GenSong/NewSong.wav", new Buffer(buffer));
-  });
+}).then(function (audioData1) {
+
+  readFile("./S2/DragonS2.wav").then((buffer) => {
+    return WavDecoder.decode(buffer);
+  }).then(function (audioData2) {
+
+    var cont = new controller(audioData1, audioData2);
+    console.log("writing...");
+    WavEncoder.encode(audioData2).then((buffer: any) => {
+      fs.writeFileSync("./GenSong/NewSong.wav", new Buffer(buffer));
+    });
+
+ });
 
 });

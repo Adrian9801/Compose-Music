@@ -1,20 +1,22 @@
 import { constants } from "./Constants";
 
 export class analyzer {
-    private audioShape: number[][];
+    private audioShape1: number[][];
+    private audioShape2: number[][];
     private ascent: number[][];
     private descent: number[][];
     private terrace: number[][];
     private valley: number[][];
     private silence: number[][];
 
-    public constructor(pAudioData: number[]) {
+    public constructor(pAudioData1: number[], pAudioData2: number[]) {
         this.ascent = [];
         this.descent = [];
         this.terrace = [];
         this.valley = [];
         this.silence = [];
-        this.audioShape = this.generateShape3(pAudioData);
+        this.audioShape2 = this.generateShape3(pAudioData2, constants.LENGTH_ZONE, true);
+        this.audioShape1 = this.generateShape3(pAudioData1, Math.round((pAudioData1.length)/(this.audioShape2.length*2)), false);
     }
 
     /*
@@ -22,7 +24,7 @@ export class analyzer {
     [Subida, Bajada, Terraza, Valle, Silencio]
     */
 
-    private generateShape(pAudioData: number[]): number[][] {
+    private generateShape(pAudioData: number[], pLengthZone: number): number[][] {
         var result: number[][] = [];
         var audioLength: number = pAudioData.length - 1;
         var difference: number = 0;
@@ -46,7 +48,7 @@ export class analyzer {
             inclination = constants.ASCENT;
             height = constants.TERRACE;
             result[zone][shape] += 1;
-            if ((index + 1) % constants.LENGTH_ZONE == 0) {
+            if ((index + 1) % pLengthZone == 0) {
                 zone++;
                 result[zone] = [0, 0, 0, 0, 0];
             }
@@ -95,7 +97,8 @@ export class analyzer {
     [Subida, Bajada, Terraza, Valle, Silencio]
     */
 
-    private generateShape3(pAudioData: number[]): number[][] {
+    private generateShape3(pAudioData: number[], pLengthZone: number, pSwitch: boolean): number[][] {
+        pLengthZone = pLengthZone|1;
         var result: number[][] = [];
         var audioLength: number = pAudioData.length - 1;
         var difference: number = 0;
@@ -104,7 +107,7 @@ export class analyzer {
         var height: number = constants.TERRACE;
         var shape: number = constants.ASCENT;
         result[0] = [0, 0, 0, 0, 0, 0];
-        for (var index: number = 0; index < audioLength; index++) {
+        for (var index: number = 0; index < audioLength; index+=2) {
             if (pAudioData[index + 1] < 0) {
                 height = constants.VALLEY;
             }
@@ -120,7 +123,7 @@ export class analyzer {
             inclination = constants.ASCENT;
             height = constants.TERRACE;
             result[zone][shape] += 1;
-            if ((index + 1) % constants.LENGTH_ZONE == 0) {
+            if (((index + 1) % (pLengthZone) == 0) && (pSwitch || this.audioShape2.length > result.length)) {
                 zone++;
                 result[zone] = [0, 0, 0, 0, 0, 0];
             }
@@ -174,7 +177,11 @@ export class analyzer {
         return pResult;
     }
 
-    public getAudioShape(): number[][] {
-        return this.audioShape;
+    public getAudioShape1(): number[][] {
+        return this.audioShape1;
+    }
+
+    public getAudioShape2(): number[][] {
+        return this.audioShape2;
     }
 }

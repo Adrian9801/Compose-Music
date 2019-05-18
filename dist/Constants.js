@@ -17,6 +17,8 @@ var constants = /** @class */ (function () {
     constants.BITS_CROMOSOMA = 16;
     constants.TOTAL_PORCENT = 100;
     constants.BITS_NUMBER = 31;
+    constants.CHANNEL1 = 0;
+    constants.CHANNEL2 = 1;
     return constants;
 }());
 exports.constants = constants;

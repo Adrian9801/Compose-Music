@@ -13,4 +13,6 @@ export declare class constants {
     static BITS_CROMOSOMA: number;
     static TOTAL_PORCENT: number;
     static BITS_NUMBER: number;
+    static CHANNEL1: number;
+    static CHANNEL2: number;
 }

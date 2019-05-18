@@ -13,4 +13,6 @@ export class constants{
     public static BITS_CROMOSOMA: number = 16;
     public static TOTAL_PORCENT: number = 100;
     public static BITS_NUMBER: number = 31;
+    public static CHANNEL1: number = 0;
+    public static CHANNEL2: number = 1;
 }

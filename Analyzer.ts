@@ -15,81 +15,8 @@ export class analyzer {
         this.terrace = [];
         this.valley = [];
         this.silence = [];
-        this.audioShape2 = this.generateShape3(pAudioData2, constants.LENGTH_ZONE, true);
-        this.audioShape1 = this.generateShape3(pAudioData1, Math.round((pAudioData1.length)/(this.audioShape2.length*2)), false);
-    }
-
-    /*
-    Este metodo me obtiene la cantidad de cada figura que aparecen por zonas
-    [Subida, Bajada, Terraza, Valle, Silencio]
-    */
-
-    private generateShape(pAudioData: number[], pLengthZone: number): number[][] {
-        var result: number[][] = [];
-        var audioLength: number = pAudioData.length - 1;
-        var difference: number = 0;
-        var inclination: number = constants.ASCENT;
-        var zone: number = 0;
-        var height: number = constants.TERRACE;
-        var shape: number = constants.ASCENT;
-        result[0] = [0, 0, 0, 0, 0];
-        for (var index: number = 0; index < audioLength; index++) {
-            if (pAudioData[index + 1] < 0) {
-                height = constants.VALLEY;
-            }
-            else if (pAudioData[index + 1] == 0) {
-                height = constants.SILENCE;
-            }
-            difference = (pAudioData[index + 1] - pAudioData[index]) * 100;
-            if (difference < 0) {
-                inclination = constants.DESCENT;
-            }
-            shape = this.getShape(Math.abs(difference), inclination, height);
-            inclination = constants.ASCENT;
-            height = constants.TERRACE;
-            result[zone][shape] += 1;
-            if ((index + 1) % pLengthZone == 0) {
-                zone++;
-                result[zone] = [0, 0, 0, 0, 0];
-            }
-        }
-        return result;
-    }
-
-    /*
-    Este metodo me obtiene el porcentaje de aparicion de todas las figuras en la cancion
-    [Subida, Bajada, Terraza, Valle, Silencio]
-    */
-
-    private generateShape2(pAudioData: number[]): number[] {
-        var result: number[] = [];
-        var audioLength: number = pAudioData.length - 1;
-        var num: number = 0;
-        var inclination: number = 0;
-        var height: number = 2;
-        var total: number = 0;
-        var shape: number = 0;
-        result = [0, 0, 0, 0, 0];
-        for (var index: number = 0; index < audioLength; index++) {
-            if (pAudioData[index + 1] < 0) {
-                height = 3;
-            }
-            else if (pAudioData[index + 1] == 0) {
-                height = 4;
-            }
-            num = (pAudioData[index + 1] - pAudioData[index]) * 100;
-            if (num < 0) {
-                inclination = 1;
-            }
-            shape = this.getShape(Math.abs(num), inclination, height);
-            inclination = 0;
-            height = 2;
-            result[shape] += 1;
-            total++;
-        }
-        console.log(result);
-        result = this.calculatePorcent(result, total);
-        return result;
+        this.audioShape2 = this.generateShape(pAudioData2, constants.LENGTH_ZONE, true);
+        this.audioShape1 = this.generateShape(pAudioData1, Math.round((pAudioData1.length) / (this.audioShape2.length * 2)), false);
     }
 
     /*
@@ -97,8 +24,8 @@ export class analyzer {
     [Subida, Bajada, Terraza, Valle, Silencio]
     */
 
-    private generateShape3(pAudioData: number[], pLengthZone: number, pSwitch: boolean): number[][] {
-        pLengthZone = pLengthZone|1;
+    private generateShape(pAudioData: number[], pLengthZone: number, pSwitch: boolean): number[][] {
+        pLengthZone = pLengthZone | 1;
         var result: number[][] = [];
         var audioLength: number = pAudioData.length - 1;
         var difference: number = 0;
@@ -107,7 +34,7 @@ export class analyzer {
         var height: number = constants.TERRACE;
         var shape: number = constants.ASCENT;
         result[0] = [0, 0, 0, 0, 0, 0];
-        for (var index: number = 0; index < audioLength; index+=2) {
+        for (var index: number = 0; index < audioLength; index += 2) {
             if (pAudioData[index + 1] < 0) {
                 height = constants.VALLEY;
             }
@@ -119,7 +46,7 @@ export class analyzer {
                 inclination = constants.DESCENT;
             }
             shape = this.getShape(Math.abs(difference), inclination, height);
-            this.addFig(shape, [pAudioData[index], pAudioData[index+1]]);
+            this.addFig(shape, [pAudioData[index], pAudioData[index + 1]]);
             inclination = constants.ASCENT;
             height = constants.TERRACE;
             result[zone][shape] += 1;
@@ -130,8 +57,8 @@ export class analyzer {
         }
         var total: number = 0;
         for (var index: number = 0; index < result.length; index++) {
-            total = result[index][constants.ASCENT] + result[index][constants.DESCENT] + 
-            result[index][constants.TERRACE] + result[index][constants.VALLEY] + result[index][constants.SILENCE];
+            total = result[index][constants.ASCENT] + result[index][constants.DESCENT] +
+                result[index][constants.TERRACE] + result[index][constants.VALLEY] + result[index][constants.SILENCE];
             result[index] = this.calculatePorcent(result[index], total);
             result[index][constants.POS_TOTAL] = total;
         }
@@ -149,10 +76,10 @@ export class analyzer {
                 break;
             }
             case constants.TERRACE: {
-                this.terrace.push(pPoints); 
+                this.terrace.push(pPoints);
                 break;
             }
-            case constants.SILENCE: {
+            case constants.VALLEY: {
                 this.valley.push(pPoints);
                 break;
             }
@@ -161,6 +88,43 @@ export class analyzer {
                 break;
             }
         }
+    }
+
+    public getTypeShape(pShape: number, pIndividual: number): number[] {
+        switch (pShape) {
+            case constants.ASCENT: {
+                return this.ascent[pIndividual % this.ascent.length];
+            }
+            case constants.DESCENT: {
+                return this.descent[pIndividual % this.descent.length];
+            }
+            case constants.TERRACE: {
+                return this.terrace[pIndividual % this.terrace.length];
+            }
+            case constants.VALLEY: {
+                return this.valley[pIndividual % this.valley.length];
+            }
+            default: {
+                return this.silence[pIndividual % this.silence.length];
+            }
+        }
+    }
+
+    public n(pZoneAudio: number[][], pNewAudioS1: number[][]): number[][] {
+        var cantIndividual: number = pZoneAudio[constants.ASCENT].length + pZoneAudio[constants.DESCENT].length +
+            pZoneAudio[constants.TERRACE].length + pZoneAudio[constants.VALLEY].length + pZoneAudio[constants.SILENCE].length;
+        while (cantIndividual > 0) {
+            for (var index: number = 0; index < pZoneAudio.length; index++) {
+                if (pZoneAudio[0].length > 0 ) {
+                    pNewAudioS1[constants.CHANNEL1] = pNewAudioS1[0].concat(this.getTypeShape(index, pZoneAudio[index][pZoneAudio.length - 1]));
+                    pZoneAudio[index].pop();
+                }
+            }
+            cantIndividual = pZoneAudio[constants.ASCENT].length + pZoneAudio[constants.DESCENT].length +
+                pZoneAudio[constants.TERRACE].length + pZoneAudio[constants.VALLEY].length + pZoneAudio[constants.SILENCE].length;
+        }
+        pNewAudioS1[constants.CHANNEL2] = pNewAudioS1[constants.CHANNEL1];
+        return pNewAudioS1;
     }
 
     private getShape(pDiference: number, pSigno: number, pHeight: number): number {

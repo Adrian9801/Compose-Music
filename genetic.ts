@@ -41,14 +41,14 @@ export class genetic {
             }
             this.newPopulation = [[],[],[],[],[]];
         }
-        var cant: number = this.actualPopulation[0].length+this.actualPopulation[1].length+this.actualPopulation[2].length+
+        /*var cant: number = this.actualPopulation[0].length+this.actualPopulation[1].length+this.actualPopulation[2].length+
         this.actualPopulation[3].length+this.actualPopulation[4].length;
         console.log(this.actualPopulation[0].length/cant);
         console.log(this.actualPopulation[1].length/cant);
         console.log(this.actualPopulation[2].length/cant);
         console.log(this.actualPopulation[3].length/cant);
         console.log(this.actualPopulation[4].length/cant);
-        console.log(cant);
+        console.log(cant);*/
     }
 
     private generatePopulation(pCantFig: number, pMinRandom: number, pMaxRandom: number, pIndexIndiv: number) {
@@ -129,8 +129,8 @@ export class genetic {
         return pKid;
     }
 
-    public getNewPopulation(): number[][] {
-        return this.newPopulation;
+    public getActualPopulation(): number[][] {
+        return this.actualPopulation;
     }
 
 

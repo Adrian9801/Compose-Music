@@ -34,14 +34,14 @@ var genetic = /** @class */ (function () {
             }
             this.newPopulation = [[], [], [], [], []];
         }
-        var cant = this.actualPopulation[0].length + this.actualPopulation[1].length + this.actualPopulation[2].length +
-            this.actualPopulation[3].length + this.actualPopulation[4].length;
-        console.log(this.actualPopulation[0].length / cant);
-        console.log(this.actualPopulation[1].length / cant);
-        console.log(this.actualPopulation[2].length / cant);
-        console.log(this.actualPopulation[3].length / cant);
-        console.log(this.actualPopulation[4].length / cant);
-        console.log(cant);
+        /*var cant: number = this.actualPopulation[0].length+this.actualPopulation[1].length+this.actualPopulation[2].length+
+        this.actualPopulation[3].length+this.actualPopulation[4].length;
+        console.log(this.actualPopulation[0].length/cant);
+        console.log(this.actualPopulation[1].length/cant);
+        console.log(this.actualPopulation[2].length/cant);
+        console.log(this.actualPopulation[3].length/cant);
+        console.log(this.actualPopulation[4].length/cant);
+        console.log(cant);*/
     };
     genetic.prototype.generatePopulation = function (pCantFig, pMinRandom, pMaxRandom, pIndexIndiv) {
         this.actualPopulation[pIndexIndiv] = [];
@@ -113,8 +113,8 @@ var genetic = /** @class */ (function () {
         pKid = pKid ^ (Math.pow(2, randomMutation));
         return pKid;
     };
-    genetic.prototype.getNewPopulation = function () {
-        return this.newPopulation;
+    genetic.prototype.getActualPopulation = function () {
+        return this.actualPopulation;
     };
     return genetic;
 }());

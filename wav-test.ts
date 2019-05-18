@@ -32,6 +32,8 @@ readFile("./S1/SW.wav").then((buffer) => {
   }).then(function (audioData2) {
 
     var cont = new controller(audioData1, audioData2);
+    audioData2.channelData[0] = new Float32Array(cont.getNewSong()[0]);
+    audioData2.channelData[1] = new Float32Array(cont.getNewSong()[1]);
     console.log("writing...");
     WavEncoder.encode(audioData2).then((buffer: any) => {
       fs.writeFileSync("./GenSong/NewSong.wav", new Buffer(buffer));

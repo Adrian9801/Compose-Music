@@ -14,5 +14,5 @@ export declare class genetic {
     private reproduction;
     private insertKid;
     private mutation;
-    getNewPopulation(): number[][];
+    getActualPopulation(): number[][];
 }

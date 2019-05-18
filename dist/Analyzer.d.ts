@@ -8,9 +8,9 @@ export declare class analyzer {
     private silence;
     constructor(pAudioData1: number[], pAudioData2: number[]);
     private generateShape;
-    private generateShape2;
-    private generateShape3;
     private addFig;
+    getTypeShape(pShape: number, pIndividual: number): number[];
+    n(pZoneAudio: number[][], pNewAudioS1: number[][]): number[][];
     private getShape;
     private calculatePorcent;
     getAudioShape1(): number[][];

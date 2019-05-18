@@ -32,12 +32,12 @@ var readFile = function (filepath) {
 readFile("./S1/SW.wav").then(function (buffer) {
     return WavDecoder.decode(buffer);
 }).then(function (audioData1) {
-    readFile("./S2/DragonS2.wav").then(function (buffer) {
+    readFile("./S2/SWS2.wav").then(function (buffer) {
         return WavDecoder.decode(buffer);
     }).then(function (audioData2) {
-        var cont = new controller_1.controller(audioData1, audioData2);
-        audioData2.channelData[0] = new Float32Array(cont.getNewSong()[0]);
-        audioData2.channelData[1] = new Float32Array(cont.getNewSong()[1]);
+        var controlador = new controller_1.controller(audioData1, audioData2);
+        audioData2.channelData[0] = new Float32Array(controlador.getNewSong()[0]);
+        audioData2.channelData[1] = new Float32Array(controlador.getNewSong()[1]);
         console.log("writing...");
         WavEncoder.encode(audioData2).then(function (buffer) {
             fs.writeFileSync("./GenSong/NewSong.wav", new Buffer(buffer));

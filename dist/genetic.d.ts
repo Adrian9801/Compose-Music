@@ -1,13 +1,14 @@
 export declare class genetic {
     private newPopulation;
     private actualPopulation;
-    private modelo;
+    private model;
     private pivotInsert;
     private totalShapeZone;
     private optimalDistance;
-    constructor(pS2: number[][]);
+    constructor();
     makeFirstPopulaton(pS1: number[], pZone: number): void;
     private generatePopulation;
+    setModel(pModel: number[][]): void;
     clear(): void;
     private getDistanceNewPopulation;
     private fitness;

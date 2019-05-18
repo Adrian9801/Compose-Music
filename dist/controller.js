@@ -8,35 +8,36 @@ var controller = /** @class */ (function () {
         this.audioS1 = pAudioS1;
         this.audioS2 = pAudioS2;
         this.newAudioS1 = [[], []];
-        this.analyceSong = new Analyzer_1.analyzer(pAudioS1.channelData[0], pAudioS2.channelData[0]);
-        console.log(this.analyceSong.getAudioShape1().length + " controller S1");
-        console.log(this.analyceSong.getAudioShape2().length + " controller S2");
-        this.genet = new genetic_1.genetic(this.analyceSong.getAudioShape2());
-        for (var index = 0; index < this.analyceSong.getAudioShape2().length; index++) {
-            this.genet.makeFirstPopulaton(this.analyceSong.getAudioShape1()[index], index);
-            console.log("Inicio");
-            this.generateNewSong();
-            console.log("A");
-            this.genet.clear();
+        this.analyceSong = new Analyzer_1.analyzer();
+        this.genet = new genetic_1.genetic();
+        for (var channel = 0; channel < Constants_1.constants.CHANNELCANT; channel++) {
+            this.analyceSong.makeShape(pAudioS1.channelData[channel], pAudioS2.channelData[channel]);
+            this.genet.setModel(this.analyceSong.getAudioShape2());
+            for (var index = 0; index < this.analyceSong.getAudioShape2().length; index++) {
+                this.genet.makeFirstPopulaton(this.analyceSong.getAudioShape1()[index], index);
+                this.generateNewSong(channel);
+                this.genet.clear();
+            }
+            this.analyceSong.clear();
         }
     }
     //Para extraer datos de el analyce y recrear la cancion
-    controller.prototype.generateNewSong = function () {
-        var zoneAudio = this.genet.getActualPopulation(); // Como saber que elemento de la lista es(SUBIDA,BAJADA,...)
-        //this.newAudioS1 = this.analyceSong.n(zoneAudio, this.newAudioS1);
+    controller.prototype.generateNewSong = function (pChannel) {
+        var zoneAudio = this.genet.getActualPopulation();
+        var inclination = [];
+        var index;
         var cantIndividual = zoneAudio[Constants_1.constants.ASCENT].length + zoneAudio[Constants_1.constants.DESCENT].length +
             zoneAudio[Constants_1.constants.TERRACE].length + zoneAudio[Constants_1.constants.VALLEY].length + zoneAudio[Constants_1.constants.SILENCE].length;
         while (cantIndividual > 0) {
-            for (var index = 0; index < zoneAudio.length; index++) {
-                if (zoneAudio[index].length > 0) {
-                    this.newAudioS1[Constants_1.constants.CHANNEL1] = this.newAudioS1[0].concat(this.analyceSong.getTypeShape(index, zoneAudio[index][zoneAudio.length - 1]));
-                    zoneAudio[index].pop();
-                }
+            index = Math.floor(Math.random() * Constants_1.constants.POS_TOTAL);
+            if (zoneAudio[index].length > 0) {
+                inclination = this.analyceSong.getTypeShape(index, zoneAudio[index][zoneAudio[index].length - 1]);
+                this.newAudioS1[pChannel].push(inclination[Constants_1.constants.POINT1]);
+                this.newAudioS1[pChannel].push(inclination[Constants_1.constants.POINT2]);
+                zoneAudio[index].pop();
+                cantIndividual--;
             }
-            cantIndividual = zoneAudio[Constants_1.constants.ASCENT].length + zoneAudio[Constants_1.constants.DESCENT].length +
-                zoneAudio[Constants_1.constants.TERRACE].length + zoneAudio[Constants_1.constants.VALLEY].length + zoneAudio[Constants_1.constants.SILENCE].length;
         }
-        this.newAudioS1[Constants_1.constants.CHANNEL2] = this.newAudioS1[Constants_1.constants.CHANNEL1];
     };
     controller.prototype.getNewSong = function () {
         return this.newAudioS1;

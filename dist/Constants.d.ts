@@ -15,4 +15,9 @@ export declare class constants {
     static BITS_NUMBER: number;
     static CHANNEL1: number;
     static CHANNEL2: number;
+    static CHANNELCANT: number;
+    static POINT1: number;
+    static POINT2: number;
+    static PONDERATE: number;
+    static BINARYBASE: number;
 }

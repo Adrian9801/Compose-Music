@@ -2,18 +2,19 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Constants_1 = require("./Constants");
 var genetic = /** @class */ (function () {
-    function genetic(pS2) {
+    function genetic() {
         this.newPopulation = [[], [], [], [], []];
         this.pivotInsert = [];
         this.actualPopulation = [];
         this.totalShapeZone = [];
-        this.modelo = pS2;
+        this.model = [];
         this.optimalDistance = 0;
     }
     genetic.prototype.makeFirstPopulaton = function (pS1, pZone) {
         var maxRandom = 0;
         var minRandom = 0;
         var cantFig = 0;
+        this.optimalDistance = 0;
         for (var index = 0; pS1.length - 1 > index; index++) {
             cantFig = Math.trunc(pS1[index] * pS1[Constants_1.constants.POS_TOTAL]);
             maxRandom = Math.trunc(pS1[index] * Constants_1.constants.LENGTH_CROMOSOMA + maxRandom);
@@ -21,7 +22,7 @@ var genetic = /** @class */ (function () {
             this.totalShapeZone.push(pS1[Constants_1.constants.POS_TOTAL]);
             this.generatePopulation(cantFig, minRandom, maxRandom, index);
             minRandom = maxRandom;
-            this.optimalDistance += Math.abs(pS1[index] - this.modelo[pZone][index]);
+            this.optimalDistance += Math.abs(pS1[index] - this.model[pZone][index]);
         }
         for (var i = 0; Constants_1.constants.PORCENT_APROX <= this.optimalDistance; i++) {
             for (var index = 0; Constants_1.constants.POS_TOTAL > index; index++) {
@@ -34,20 +35,15 @@ var genetic = /** @class */ (function () {
             }
             this.newPopulation = [[], [], [], [], []];
         }
-        /*var cant: number = this.actualPopulation[0].length+this.actualPopulation[1].length+this.actualPopulation[2].length+
-        this.actualPopulation[3].length+this.actualPopulation[4].length;
-        console.log(this.actualPopulation[0].length/cant);
-        console.log(this.actualPopulation[1].length/cant);
-        console.log(this.actualPopulation[2].length/cant);
-        console.log(this.actualPopulation[3].length/cant);
-        console.log(this.actualPopulation[4].length/cant);
-        console.log(cant);*/
     };
     genetic.prototype.generatePopulation = function (pCantFig, pMinRandom, pMaxRandom, pIndexIndiv) {
         this.actualPopulation[pIndexIndiv] = [];
         for (var index = 0; pCantFig > index; index++) {
             this.actualPopulation[pIndexIndiv].push(Math.trunc(Math.random() * (pMaxRandom - pMinRandom) + pMinRandom));
         }
+    };
+    genetic.prototype.setModel = function (pModel) {
+        this.model = pModel;
     };
     genetic.prototype.clear = function () {
         this.newPopulation = [[], [], [], [], []];
@@ -58,19 +54,19 @@ var genetic = /** @class */ (function () {
     genetic.prototype.getDistanceNewPopulation = function (pZone) {
         var cant = this.newPopulation[Constants_1.constants.ASCENT].length + this.newPopulation[Constants_1.constants.DESCENT].length +
             this.newPopulation[Constants_1.constants.TERRACE].length + this.newPopulation[Constants_1.constants.VALLEY].length + this.newPopulation[Constants_1.constants.SILENCE].length;
-        var distance = Math.abs((this.newPopulation[Constants_1.constants.ASCENT].length / cant) - this.modelo[pZone][Constants_1.constants.ASCENT]) +
-            Math.abs((this.newPopulation[Constants_1.constants.DESCENT].length / cant) - this.modelo[pZone][Constants_1.constants.DESCENT])
-            + Math.abs((this.newPopulation[Constants_1.constants.TERRACE].length / cant) - this.modelo[pZone][Constants_1.constants.TERRACE]) +
-            Math.abs((this.newPopulation[Constants_1.constants.VALLEY].length / cant) - this.modelo[pZone][Constants_1.constants.VALLEY])
-            + Math.abs((this.newPopulation[Constants_1.constants.SILENCE].length / cant) - this.modelo[pZone][Constants_1.constants.SILENCE]);
+        var distance = Math.abs((this.newPopulation[Constants_1.constants.ASCENT].length / cant) - this.model[pZone][Constants_1.constants.ASCENT]) +
+            Math.abs((this.newPopulation[Constants_1.constants.DESCENT].length / cant) - this.model[pZone][Constants_1.constants.DESCENT])
+            + Math.abs((this.newPopulation[Constants_1.constants.TERRACE].length / cant) - this.model[pZone][Constants_1.constants.TERRACE]) +
+            Math.abs((this.newPopulation[Constants_1.constants.VALLEY].length / cant) - this.model[pZone][Constants_1.constants.VALLEY])
+            + Math.abs((this.newPopulation[Constants_1.constants.SILENCE].length / cant) - this.model[pZone][Constants_1.constants.SILENCE]);
         return distance;
     };
     genetic.prototype.fitness = function (pZone, pShape) {
         var indiviAccept = [];
         var shapePorcent = this.actualPopulation[pShape].length / this.totalShapeZone[pShape];
-        var ponderate = this.modelo[pZone][pShape] / shapePorcent;
+        var ponderate = this.model[pZone][pShape] / shapePorcent;
         var numHijos = 0;
-        if (ponderate > 1) {
+        if (ponderate > Constants_1.constants.PONDERATE) {
             numHijos = (ponderate - 1) * this.actualPopulation[pShape].length;
         }
         for (var index = 0; index < this.actualPopulation[pShape].length; index++) {
@@ -110,7 +106,7 @@ var genetic = /** @class */ (function () {
     genetic.prototype.mutation = function (pKid) {
         var randomMutation = 0;
         randomMutation = Math.floor(Math.random() * Constants_1.constants.BITS_CROMOSOMA);
-        pKid = pKid ^ (Math.pow(2, randomMutation));
+        pKid = pKid ^ (Math.pow(Constants_1.constants.BINARYBASE, randomMutation));
         return pKid;
     };
     genetic.prototype.getActualPopulation = function () {

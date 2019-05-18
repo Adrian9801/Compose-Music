@@ -2,15 +2,20 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Constants_1 = require("./Constants");
 var analyzer = /** @class */ (function () {
-    function analyzer(pAudioData1, pAudioData2) {
+    function analyzer() {
         this.ascent = [];
         this.descent = [];
         this.terrace = [];
         this.valley = [];
         this.silence = [];
-        this.audioShape2 = this.generateShape(pAudioData2, Constants_1.constants.LENGTH_ZONE, true);
-        this.audioShape1 = this.generateShape(pAudioData1, Math.round((pAudioData1.length) / (this.audioShape2.length * 2)), false);
+        this.audioShape2 = [];
+        this.audioShape1 = [];
     }
+    analyzer.prototype.makeShape = function (pAudioData1, pAudioData2) {
+        this.audioShape2 = this.generateShape(pAudioData2, Constants_1.constants.LENGTH_ZONE, true);
+        var zoneCant = Math.round((pAudioData1.length) / (this.audioShape2.length * 2));
+        this.audioShape1 = this.generateShape(pAudioData1, zoneCant, false);
+    };
     /*
     Este metodo me obtiene el porcentaje de aparicion de las figuras en zonas de la cancion
     [Subida, Bajada, Terraza, Valle, Silencio]
@@ -55,6 +60,15 @@ var analyzer = /** @class */ (function () {
         }
         return result;
     };
+    analyzer.prototype.clear = function () {
+        this.ascent = [];
+        this.descent = [];
+        this.terrace = [];
+        this.valley = [];
+        this.silence = [];
+        this.audioShape1 = [];
+        this.audioShape2 = [];
+    };
     analyzer.prototype.addFig = function (pShape, pPoints) {
         switch (pShape) {
             case Constants_1.constants.ASCENT: {
@@ -97,22 +111,6 @@ var analyzer = /** @class */ (function () {
                 return this.silence[pIndividual % this.silence.length];
             }
         }
-    };
-    analyzer.prototype.n = function (pZoneAudio, pNewAudioS1) {
-        var cantIndividual = pZoneAudio[Constants_1.constants.ASCENT].length + pZoneAudio[Constants_1.constants.DESCENT].length +
-            pZoneAudio[Constants_1.constants.TERRACE].length + pZoneAudio[Constants_1.constants.VALLEY].length + pZoneAudio[Constants_1.constants.SILENCE].length;
-        while (cantIndividual > 0) {
-            for (var index = 0; index < pZoneAudio.length; index++) {
-                if (pZoneAudio[index].length > 0) {
-                    pNewAudioS1[Constants_1.constants.CHANNEL1] = pNewAudioS1[0].concat(this.getTypeShape(index, pZoneAudio[index][pZoneAudio.length - 1]));
-                    pZoneAudio[index].pop();
-                }
-            }
-            cantIndividual = pZoneAudio[Constants_1.constants.ASCENT].length + pZoneAudio[Constants_1.constants.DESCENT].length +
-                pZoneAudio[Constants_1.constants.TERRACE].length + pZoneAudio[Constants_1.constants.VALLEY].length + pZoneAudio[Constants_1.constants.SILENCE].length;
-        }
-        pNewAudioS1[Constants_1.constants.CHANNEL2] = pNewAudioS1[Constants_1.constants.CHANNEL1];
-        return pNewAudioS1;
     };
     analyzer.prototype.getShape = function (pDiference, pSigno, pHeight) {
         if (pDiference < Constants_1.constants.PORCENT_FLAT) {

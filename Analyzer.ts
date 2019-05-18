@@ -9,14 +9,20 @@ export class analyzer {
     private valley: number[][];
     private silence: number[][];
 
-    public constructor(pAudioData1: number[], pAudioData2: number[]) {
+    public constructor() {
         this.ascent = [];
         this.descent = [];
         this.terrace = [];
         this.valley = [];
         this.silence = [];
+        this.audioShape2 = [];
+        this.audioShape1 = [];
+    }
+
+    public makeShape(pAudioData1: number[], pAudioData2: number[]){
         this.audioShape2 = this.generateShape(pAudioData2, constants.LENGTH_ZONE, true);
-        this.audioShape1 = this.generateShape(pAudioData1, Math.round((pAudioData1.length) / (this.audioShape2.length * 2)), false);
+        var zoneCant: number = Math.round((pAudioData1.length) / (this.audioShape2.length * 2));
+        this.audioShape1 = this.generateShape(pAudioData1, zoneCant, false);
     }
 
     /*
@@ -65,6 +71,16 @@ export class analyzer {
         return result;
     }
 
+    public clear(){
+        this.ascent = [];
+        this.descent = [];
+        this.terrace = [];
+        this.valley = [];
+        this.silence = [];
+        this.audioShape1 = [];
+        this.audioShape2 = [];
+    }
+
     private addFig(pShape: number, pPoints: number[]) {
         switch (pShape) {
             case constants.ASCENT: {
@@ -108,23 +124,6 @@ export class analyzer {
                 return this.silence[pIndividual % this.silence.length];
             }
         }
-    }
-
-    public n(pZoneAudio: number[][], pNewAudioS1: number[][]): number[][] {
-        var cantIndividual: number = pZoneAudio[constants.ASCENT].length + pZoneAudio[constants.DESCENT].length +
-            pZoneAudio[constants.TERRACE].length + pZoneAudio[constants.VALLEY].length + pZoneAudio[constants.SILENCE].length;
-        while (cantIndividual > 0) {
-            for (var index: number = 0; index < pZoneAudio.length; index++) {
-                if (pZoneAudio[0].length > 0 ) {
-                    pNewAudioS1[constants.CHANNEL1] = pNewAudioS1[0].concat(this.getTypeShape(index, pZoneAudio[index][pZoneAudio.length - 1]));
-                    pZoneAudio[index].pop();
-                }
-            }
-            cantIndividual = pZoneAudio[constants.ASCENT].length + pZoneAudio[constants.DESCENT].length +
-                pZoneAudio[constants.TERRACE].length + pZoneAudio[constants.VALLEY].length + pZoneAudio[constants.SILENCE].length;
-        }
-        pNewAudioS1[constants.CHANNEL2] = pNewAudioS1[constants.CHANNEL1];
-        return pNewAudioS1;
     }
 
     private getShape(pDiference: number, pSigno: number, pHeight: number): number {

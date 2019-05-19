@@ -20,4 +20,6 @@ export declare class constants {
     static POINT2: number;
     static PONDERATE: number;
     static BINARYBASE: number;
+    static S2: boolean;
+    static S1: boolean;
 }

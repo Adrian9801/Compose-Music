@@ -20,9 +20,9 @@ export class analyzer {
     }
 
     public makeShape(pAudioData1: number[], pAudioData2: number[]){
-        this.audioShape2 = this.generateShape(pAudioData2, constants.LENGTH_ZONE, true);
+        this.audioShape2 = this.generateShape(pAudioData2, constants.LENGTH_ZONE, constants.S2);
         var zoneCant: number = Math.round((pAudioData1.length) / (this.audioShape2.length * 2));
-        this.audioShape1 = this.generateShape(pAudioData1, zoneCant, false);
+        this.audioShape1 = this.generateShape(pAudioData1, zoneCant, constants.S1);
     }
 
     /*
@@ -126,11 +126,11 @@ export class analyzer {
         }
     }
 
-    private getShape(pDiference: number, pSigno: number, pHeight: number): number {
+    private getShape(pDiference: number, pInclination: number, pHeight: number): number {
         if (pDiference < constants.PORCENT_FLAT) {
-            pSigno = pHeight;
+            pInclination = pHeight;
         }
-        return pSigno;
+        return pInclination;
     }
 
     private calculatePorcent(pResult: number[], pTotal: number): number[] {

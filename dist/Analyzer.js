@@ -12,9 +12,9 @@ var analyzer = /** @class */ (function () {
         this.audioShape1 = [];
     }
     analyzer.prototype.makeShape = function (pAudioData1, pAudioData2) {
-        this.audioShape2 = this.generateShape(pAudioData2, Constants_1.constants.LENGTH_ZONE, true);
+        this.audioShape2 = this.generateShape(pAudioData2, Constants_1.constants.LENGTH_ZONE, Constants_1.constants.S2);
         var zoneCant = Math.round((pAudioData1.length) / (this.audioShape2.length * 2));
-        this.audioShape1 = this.generateShape(pAudioData1, zoneCant, false);
+        this.audioShape1 = this.generateShape(pAudioData1, zoneCant, Constants_1.constants.S1);
     };
     /*
     Este metodo me obtiene el porcentaje de aparicion de las figuras en zonas de la cancion
@@ -112,11 +112,11 @@ var analyzer = /** @class */ (function () {
             }
         }
     };
-    analyzer.prototype.getShape = function (pDiference, pSigno, pHeight) {
+    analyzer.prototype.getShape = function (pDiference, pInclination, pHeight) {
         if (pDiference < Constants_1.constants.PORCENT_FLAT) {
-            pSigno = pHeight;
+            pInclination = pHeight;
         }
-        return pSigno;
+        return pInclination;
     };
     analyzer.prototype.calculatePorcent = function (pResult, pTotal) {
         for (var index = 0; index < pResult.length - 1; index++) {

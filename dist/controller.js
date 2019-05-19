@@ -11,10 +11,26 @@ var controller = /** @class */ (function () {
         this.analyceSong = new Analyzer_1.analyzer();
         this.genet = new genetic_1.genetic();
         for (var channel = 0; channel < Constants_1.constants.CHANNELCANT; channel++) {
+            console.log("//////////////// " + channel + "////////////////");
+            console.log();
             this.analyceSong.makeShape(pAudioS1.channelData[channel], pAudioS2.channelData[channel]);
             this.genet.setModel(this.analyceSong.getAudioShape2());
             for (var index = 0; index < this.analyceSong.getAudioShape2().length; index++) {
+                console.log("//////////////// " + index + " ////////////////");
+                console.log("----------------S2 Model------------------- ");
+                console.log("|S | " + this.analyceSong.getAudioShape2()[index][0] + "| ");
+                console.log("------------------------------------------- ");
+                console.log("|B | " + this.analyceSong.getAudioShape2()[index][1] + "| ");
+                console.log("------------------------------------------- ");
+                console.log("|T | " + this.analyceSong.getAudioShape2()[index][2] + "| ");
+                console.log("------------------------------------------- ");
+                console.log("|V | " + this.analyceSong.getAudioShape2()[index][3] + "| ");
+                console.log("------------------------------------------- ");
+                console.log("|SS| " + this.analyceSong.getAudioShape2()[index][4] + "| ");
+                console.log("------------------------------------------- ");
+                console.log("----------------S1 Beagins------------------- ");
                 this.genet.makeFirstPopulaton(this.analyceSong.getAudioShape1()[index], index);
+                console.log();
                 this.generateNewSong(channel);
                 this.genet.clear();
             }

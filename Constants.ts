@@ -20,4 +20,6 @@ export class constants{
     public static POINT2: number = 1;
     public static PONDERATE: number = 1;
     public static BINARYBASE: number = 2;
+    public static S2: boolean = true;
+    public static S1: boolean = false;
 }

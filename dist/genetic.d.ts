@@ -5,9 +5,11 @@ export declare class genetic {
     private pivotInsert;
     private totalShapeZone;
     private optimalDistance;
+    private totalShape;
     constructor();
     makeFirstPopulaton(pS1: number[], pZone: number): void;
     private generatePopulation;
+    private makePopulation;
     setModel(pModel: number[][]): void;
     clear(): void;
     private getDistanceNewPopulation;

@@ -12,6 +12,7 @@ import * as WavEncoder from 'wav-encoder';
 import * as WavDecoder from 'wav-decoder';
 
 import { controller } from './controller';
+import { constants } from './Constants';
 
 const readFile = (filepath: string) => {
   return new Promise((resolve, reject) => {
@@ -23,17 +24,17 @@ const readFile = (filepath: string) => {
     });
   });
 };
-readFile("./S1/SW.wav").then((buffer) => {
+readFile(process.argv[2]).then((buffer) => {
   return WavDecoder.decode(buffer);
 }).then(function (audioData1) {
 
-  readFile("./S2/SWS2.wav").then((buffer) => {
+  readFile(process.argv[3]).then((buffer) => {
     return WavDecoder.decode(buffer);
   }).then(function (audioData2) {
 
     var controlador = new controller(audioData1, audioData2);
-    audioData2.channelData[0] = new Float32Array(controlador.getNewSong()[0]);
-    audioData2.channelData[1] = new Float32Array(controlador.getNewSong()[1]);
+    audioData2.channelData[constants.CHANNEL1] = new Float32Array(controlador.getNewSong()[0]);
+    audioData2.channelData[constants.CHANNEL2] = new Float32Array(controlador.getNewSong()[1]);
     
     console.log("writing...");
     WavEncoder.encode(audioData2).then((buffer: any) => {

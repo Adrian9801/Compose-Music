@@ -24,6 +24,8 @@ var constants = /** @class */ (function () {
     constants.POINT2 = 1;
     constants.PONDERATE = 1;
     constants.BINARYBASE = 2;
+    constants.S2 = true;
+    constants.S1 = false;
     return constants;
 }());
 exports.constants = constants;

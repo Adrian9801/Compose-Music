@@ -11,6 +11,9 @@ import * as WavEncoder from 'wav-encoder';
 // import { default as ft } from 'fourier-transform';
 import * as WavDecoder from 'wav-decoder';
 
+import { controller } from './controller';
+import { constants } from './Constants';
+
 const readFile = (filepath: string) => {
   return new Promise((resolve, reject) => {
     fs.readFile(filepath, (err, buffer) => {
@@ -21,37 +24,23 @@ const readFile = (filepath: string) => {
     });
   });
 };
-
-readFile("C:\\Users\\adri-\\OneDrive\\Escritorio\\Dua.wav").then((buffer) => {
+readFile(process.argv[2]).then((buffer) => {
   return WavDecoder.decode(buffer);
-}).then(function(audioData) {
-  console.log("ampliando 30%");
-  const size = 20000;
+}).then(function (audioData1) {
 
-  for(var i=0; i<10; i++) {
-    console.log(audioData.channelData[0][i]);
-    console.log(audioData.channelData[1][i]);
-    console.log('*******************');
-  }
+  readFile(process.argv[3]).then((buffer) => {
+    return WavDecoder.decode(buffer);
+  }).then(function (audioData2) {
 
-  // for(var i=0; i<audioData.channelData[0].length; i++) {
-  //   audioData.channelData[1][i]+=audioData.channelData[0][i];
-  //   audioData.channelData[0][i]*=20;
-  //   audioData.channelData[0][i]+=0.000000259254;
-  // }
+    var controlador = new controller(audioData1, audioData2);
+    audioData2.channelData[constants.CHANNEL1] = new Float32Array(controlador.getNewSong()[0]);
+    audioData2.channelData[constants.CHANNEL2] = new Float32Array(controlador.getNewSong()[1]);
+    
+    console.log("writing...");
+    WavEncoder.encode(audioData2).then((buffer: any) => {
+      fs.writeFileSync("./GenSong/NewSong.wav", new Buffer(buffer));
+    });
 
-  for(var i=44100*5; i<44100*10; i++) {
-    audioData.channelData[0][i-44100*5] = audioData.channelData[0][i];
-  }
-
-  for(var i=44100*11; i<44100*16; i++) {
-    audioData.channelData[0][i+44100*6] = audioData.channelData[0][i];
-  }
-
-
-  console.log("writing...");
-  WavEncoder.encode(audioData).then((buffer: any) => {
-    fs.writeFileSync("C:\\Users\\adri-\\OneDrive\\Escritorio\\Dual.wav", new Buffer(buffer));
-  });
+ });
 
 });

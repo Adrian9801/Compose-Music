@@ -52,9 +52,7 @@ export class analyzer {
                 inclination = constants.DESCENT;
             }
             shape = this.getShape(Math.abs(difference), inclination, height);
-            if(!pSwitch){
-                this.addFig(shape, [pAudioData[index], pAudioData[index + 1]]);
-            }
+            this.addFig(shape, [pAudioData[index], pAudioData[index + 1]], pSwitch);
             inclination = constants.ASCENT;
             height = constants.TERRACE;
             result[zone][shape] += 1;
@@ -63,14 +61,18 @@ export class analyzer {
                 result[zone] = [0, 0, 0, 0, 0, 0];
             }
         }
+        return this.savePorcent(result);
+    }
+
+    private savePorcent(pResult: number[][]){
         var total: number = 0;
-        for (var index: number = 0; index < result.length; index++) {
-            total = result[index][constants.ASCENT] + result[index][constants.DESCENT] +
-                result[index][constants.TERRACE] + result[index][constants.VALLEY] + result[index][constants.SILENCE];
-            result[index] = this.calculatePorcent(result[index], total);
-            result[index][constants.POS_TOTAL] = total;
+        for (var index: number = 0; index < pResult.length; index++) {
+            total = pResult[index][constants.ASCENT] + pResult[index][constants.DESCENT] +
+            pResult[index][constants.TERRACE] + pResult[index][constants.VALLEY] + pResult[index][constants.SILENCE];
+            pResult[index] = this.calculatePorcent(pResult[index], total);
+            pResult[index][constants.POS_TOTAL] = total;
         }
-        return result;
+        return pResult;
     }
 
     public clear(){
@@ -83,27 +85,29 @@ export class analyzer {
         this.audioShape2 = [];
     }
 
-    private addFig(pShape: number, pPoints: number[]) {
-        switch (pShape) {
-            case constants.ASCENT: {
-                this.ascent.push(pPoints);
-                break;
-            }
-            case constants.DESCENT: {
-                this.descent.push(pPoints);
-                break;
-            }
-            case constants.TERRACE: {
-                this.terrace.push(pPoints);
-                break;
-            }
-            case constants.VALLEY: {
-                this.valley.push(pPoints);
-                break;
-            }
-            default: {
-                this.silence.push(pPoints);
-                break;
+    private addFig(pShape: number, pPoints: number[], pSwitch: boolean) {
+        if(!pSwitch){
+            switch (pShape) {
+                case constants.ASCENT: {
+                    this.ascent.push(pPoints);
+                    break;
+                }
+                case constants.DESCENT: {
+                    this.descent.push(pPoints);
+                    break;
+                }
+                case constants.TERRACE: {
+                    this.terrace.push(pPoints);
+                    break;
+                }
+                case constants.VALLEY: {
+                    this.valley.push(pPoints);
+                    break;
+                }
+                default: {
+                    this.silence.push(pPoints);
+                    break;
+                }
             }
         }
     }

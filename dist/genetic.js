@@ -51,7 +51,7 @@ var genetic = /** @class */ (function () {
         }
     };
     genetic.prototype.makePopulation = function (pZone) {
-        for (var i = 0; Constants_1.constants.PORCENT_APROX <= this.optimalDistance; i++) {
+        while (Constants_1.constants.PORCENT_APROX <= this.optimalDistance) {
             for (var index = 0; Constants_1.constants.POS_TOTAL > index; index++) {
                 this.fitness(pZone, index);
             }

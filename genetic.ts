@@ -65,7 +65,7 @@ export class genetic {
     }
 
     private makePopulation(pZone: number){
-        for(var i: number = 0; constants.PORCENT_APROX <= this.optimalDistance; i++){
+        while(constants.PORCENT_APROX <= this.optimalDistance){
             for(var index: number = 0; constants.POS_TOTAL > index; index++){
                 this.fitness(pZone,index);
             }

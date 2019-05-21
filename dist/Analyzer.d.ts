@@ -9,6 +9,7 @@ export declare class analyzer {
     constructor();
     makeShape(pAudioData1: number[], pAudioData2: number[]): void;
     private generateShape;
+    private savePorcent;
     clear(): void;
     private addFig;
     getTypeShape(pShape: number, pIndividual: number): number[];

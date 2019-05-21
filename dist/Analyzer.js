@@ -42,9 +42,7 @@ var analyzer = /** @class */ (function () {
                 inclination = Constants_1.constants.DESCENT;
             }
             shape = this.getShape(Math.abs(difference), inclination, height);
-            if (!pSwitch) {
-                this.addFig(shape, [pAudioData[index], pAudioData[index + 1]]);
-            }
+            this.addFig(shape, [pAudioData[index], pAudioData[index + 1]], pSwitch);
             inclination = Constants_1.constants.ASCENT;
             height = Constants_1.constants.TERRACE;
             result[zone][shape] += 1;
@@ -53,14 +51,17 @@ var analyzer = /** @class */ (function () {
                 result[zone] = [0, 0, 0, 0, 0, 0];
             }
         }
+        return this.savePorcent(result);
+    };
+    analyzer.prototype.savePorcent = function (pResult) {
         var total = 0;
-        for (var index = 0; index < result.length; index++) {
-            total = result[index][Constants_1.constants.ASCENT] + result[index][Constants_1.constants.DESCENT] +
-                result[index][Constants_1.constants.TERRACE] + result[index][Constants_1.constants.VALLEY] + result[index][Constants_1.constants.SILENCE];
-            result[index] = this.calculatePorcent(result[index], total);
-            result[index][Constants_1.constants.POS_TOTAL] = total;
+        for (var index = 0; index < pResult.length; index++) {
+            total = pResult[index][Constants_1.constants.ASCENT] + pResult[index][Constants_1.constants.DESCENT] +
+                pResult[index][Constants_1.constants.TERRACE] + pResult[index][Constants_1.constants.VALLEY] + pResult[index][Constants_1.constants.SILENCE];
+            pResult[index] = this.calculatePorcent(pResult[index], total);
+            pResult[index][Constants_1.constants.POS_TOTAL] = total;
         }
-        return result;
+        return pResult;
     };
     analyzer.prototype.clear = function () {
         this.ascent = [];
@@ -71,27 +72,29 @@ var analyzer = /** @class */ (function () {
         this.audioShape1 = [];
         this.audioShape2 = [];
     };
-    analyzer.prototype.addFig = function (pShape, pPoints) {
-        switch (pShape) {
-            case Constants_1.constants.ASCENT: {
-                this.ascent.push(pPoints);
-                break;
-            }
-            case Constants_1.constants.DESCENT: {
-                this.descent.push(pPoints);
-                break;
-            }
-            case Constants_1.constants.TERRACE: {
-                this.terrace.push(pPoints);
-                break;
-            }
-            case Constants_1.constants.VALLEY: {
-                this.valley.push(pPoints);
-                break;
-            }
-            default: {
-                this.silence.push(pPoints);
-                break;
+    analyzer.prototype.addFig = function (pShape, pPoints, pSwitch) {
+        if (!pSwitch) {
+            switch (pShape) {
+                case Constants_1.constants.ASCENT: {
+                    this.ascent.push(pPoints);
+                    break;
+                }
+                case Constants_1.constants.DESCENT: {
+                    this.descent.push(pPoints);
+                    break;
+                }
+                case Constants_1.constants.TERRACE: {
+                    this.terrace.push(pPoints);
+                    break;
+                }
+                case Constants_1.constants.VALLEY: {
+                    this.valley.push(pPoints);
+                    break;
+                }
+                default: {
+                    this.silence.push(pPoints);
+                    break;
+                }
             }
         }
     };

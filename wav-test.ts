@@ -33,11 +33,11 @@ readFile(process.argv[2]).then((buffer) => {
   }).then(function (audioData2) {
 
     var controlador = new controller(audioData1, audioData2);
-    audioData2.channelData[constants.CHANNEL1] = new Float32Array(controlador.getNewSong()[0]);
-    audioData2.channelData[constants.CHANNEL2] = new Float32Array(controlador.getNewSong()[1]);
+    audioData1.channelData[constants.CHANNEL1] = new Float32Array(controlador.getNewSong()[constants.CHANNEL1]);
+    audioData1.channelData[constants.CHANNEL2] = new Float32Array(controlador.getNewSong()[constants.CHANNEL2]);
     
     console.log("writing...");
-    WavEncoder.encode(audioData2).then((buffer: any) => {
+    WavEncoder.encode(audioData1).then((buffer: any) => {
       fs.writeFileSync("./GenSong/NewSong.wav", new Buffer(buffer));
     });
 

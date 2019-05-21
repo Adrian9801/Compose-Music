@@ -25,7 +25,7 @@ export class controller {
             this.genet.setModel(this.analyceSong.getAudioShape2());
 
             
-            for (var index: number = 0; index < this.analyceSong.getAudioShape2().length; index++) {
+            for (var index: number = 2; index < this.analyceSong.getAudioShape2().length; index++) {
                 console.log( "//////////////// " +index+ " ////////////////");
                 console.log( "----------------S2 Model------------------- ");
                 console.log( "|S | "+this.analyceSong.getAudioShape2()[index][0]+"| ");
@@ -38,9 +38,9 @@ export class controller {
                 console.log( "------------------------------------------- ");
                 console.log( "|SS| "+this.analyceSong.getAudioShape2()[index][4]+"| "); 
                 console.log( "------------------------------------------- ");
+                console.log();
 
-
-                console.log( "----------------S1 Beagins------------------- ");
+                console.log( "----------------S1 Begin------------------- ");
                 this.genet.makeFirstPopulaton(this.analyceSong.getAudioShape1()[index], index);
                 console.log();
                 this.generateNewSong(channel);
@@ -58,6 +58,7 @@ export class controller {
         var cantIndividual: number = zoneAudio[constants.ASCENT].length + zoneAudio[constants.DESCENT].length +
             zoneAudio[constants.TERRACE].length + zoneAudio[constants.VALLEY].length + zoneAudio[constants.SILENCE].length;
         while (cantIndividual > 0) {
+
             index = Math.floor(Math.random() * constants.POS_TOTAL);
             if (zoneAudio[index].length > 0) {
                 inclination = this.analyceSong.getTypeShape(index, zoneAudio[index][zoneAudio[index].length - 1]);
@@ -66,11 +67,11 @@ export class controller {
                 zoneAudio[index].pop();
                 cantIndividual--;
             }
+
         }
     }
 
     public getNewSong(): number[][] {
         return this.newAudioS1;
     }
-
 }

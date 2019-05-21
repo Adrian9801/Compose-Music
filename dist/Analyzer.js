@@ -42,7 +42,9 @@ var analyzer = /** @class */ (function () {
                 inclination = Constants_1.constants.DESCENT;
             }
             shape = this.getShape(Math.abs(difference), inclination, height);
-            this.addFig(shape, [pAudioData[index], pAudioData[index + 1]]);
+            if (!pSwitch) {
+                this.addFig(shape, [pAudioData[index], pAudioData[index + 1]]);
+            }
             inclination = Constants_1.constants.ASCENT;
             height = Constants_1.constants.TERRACE;
             result[zone][shape] += 1;

@@ -32,6 +32,7 @@ export class genetic {
             maxRandom = Math.trunc(pS1[index] * constants.LENGTH_CROMOSOMA + maxRandom);
             console.log("|" + tipeShape[index] + "| PORCENT = " + pS1[index] + " | CANT = " + cantFig + " | MIN = " + minRandom + " | MAX = " + maxRandom + " | ");
             console.log("------------------------------------------- ");
+            console.log();
             this.pivotInsert.push(maxRandom);
             this.totalShapeZone.push(pS1[constants.POS_TOTAL]);
             this.generatePopulation(cantFig, minRandom, maxRandom, index);
@@ -68,7 +69,6 @@ export class genetic {
             for(var index: number = 0; constants.POS_TOTAL > index; index++){
                 this.fitness(pZone,index);
             }
-            this.getDistanceNewPopulation(pZone);
             if(this.getDistanceNewPopulation(pZone) < this.optimalDistance){
                 this.actualPopulation = Object.assign([],this.newPopulation);
                 this.optimalDistance = this.getDistanceNewPopulation(pZone);
@@ -105,7 +105,7 @@ export class genetic {
         var ponderate: number = this.model[pZone][pShape] / shapePorcent;
         var numHijos: number = 0;
         if (ponderate > constants.PONDERATE) {
-            numHijos = (ponderate - 1) * this.actualPopulation[pShape].length;
+            numHijos = (ponderate - constants.PONDERATE) * this.actualPopulation[pShape].length;
         }
         for (var index: number = 0; index < this.actualPopulation[pShape].length; index++) {
             if (Math.random() <= ponderate) {
@@ -120,15 +120,17 @@ export class genetic {
 
     private reproduction(pFather: number, pMother: number, pPopulation: number) {
         var random: number = 0;
+        var mask: number = 0;
         for (var index = 0; index < pPopulation; index++) {
             var kid: number;
             random = Math.floor(Math.random() * constants.BITS_CROMOSOMA);
             pFather = pFather >> (random);
             pFather = pFather << (random);
-
-            pMother = pMother << (constants.BITS_NUMBER - random);
-            pMother = pMother >> (constants.BITS_NUMBER - random);
-            kid = pMother & pFather;
+            
+            mask = pMother >> (random);
+            mask = mask << (random);
+            pMother = pMother ^ pFather;
+            kid = pMother | pFather;
             if ((Math.random() * constants.TOTAL_PORCENT) < constants.MUTATION) {
                 kid = this.mutation(kid);
             }

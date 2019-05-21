@@ -15,7 +15,7 @@ var controller = /** @class */ (function () {
             console.log();
             this.analyceSong.makeShape(pAudioS1.channelData[channel], pAudioS2.channelData[channel]);
             this.genet.setModel(this.analyceSong.getAudioShape2());
-            for (var index = 0; index < this.analyceSong.getAudioShape2().length; index++) {
+            for (var index = 2; index < this.analyceSong.getAudioShape2().length; index++) {
                 console.log("//////////////// " + index + " ////////////////");
                 console.log("----------------S2 Model------------------- ");
                 console.log("|S | " + this.analyceSong.getAudioShape2()[index][0] + "| ");
@@ -28,7 +28,8 @@ var controller = /** @class */ (function () {
                 console.log("------------------------------------------- ");
                 console.log("|SS| " + this.analyceSong.getAudioShape2()[index][4] + "| ");
                 console.log("------------------------------------------- ");
-                console.log("----------------S1 Beagins------------------- ");
+                console.log();
+                console.log("----------------S1 Begin------------------- ");
                 this.genet.makeFirstPopulaton(this.analyceSong.getAudioShape1()[index], index);
                 console.log();
                 this.generateNewSong(channel);

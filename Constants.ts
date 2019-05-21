@@ -7,7 +7,7 @@ export class constants{
     public static SILENCE: number = 4;
     public static POS_TOTAL: number = 5;
     public static PORCENT_FLAT: number = 0.1;
-    public static PORCENT_APROX: number = 0.15;
+    public static PORCENT_APROX: number = 0.05;
     public static LENGTH_CROMOSOMA: number = 65535;
     public static MUTATION: number = 6.35;
     public static BITS_CROMOSOMA: number = 16;

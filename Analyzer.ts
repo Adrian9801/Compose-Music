@@ -52,7 +52,9 @@ export class analyzer {
                 inclination = constants.DESCENT;
             }
             shape = this.getShape(Math.abs(difference), inclination, height);
-            this.addFig(shape, [pAudioData[index], pAudioData[index + 1]]);
+            if(!pSwitch){
+                this.addFig(shape, [pAudioData[index], pAudioData[index + 1]]);
+            }
             inclination = constants.ASCENT;
             height = constants.TERRACE;
             result[zone][shape] += 1;

@@ -37,10 +37,10 @@ readFile(process.argv[2]).then(function (buffer) {
         return WavDecoder.decode(buffer);
     }).then(function (audioData2) {
         var controlador = new controller_1.controller(audioData1, audioData2);
-        audioData2.channelData[Constants_1.constants.CHANNEL1] = new Float32Array(controlador.getNewSong()[0]);
-        audioData2.channelData[Constants_1.constants.CHANNEL2] = new Float32Array(controlador.getNewSong()[1]);
+        audioData1.channelData[Constants_1.constants.CHANNEL1] = new Float32Array(controlador.getNewSong()[Constants_1.constants.CHANNEL1]);
+        audioData1.channelData[Constants_1.constants.CHANNEL2] = new Float32Array(controlador.getNewSong()[Constants_1.constants.CHANNEL2]);
         console.log("writing...");
-        WavEncoder.encode(audioData2).then(function (buffer) {
+        WavEncoder.encode(audioData1).then(function (buffer) {
             fs.writeFileSync("./GenSong/NewSong.wav", new Buffer(buffer));
         });
     });

@@ -23,6 +23,7 @@ var genetic = /** @class */ (function () {
             maxRandom = Math.trunc(pS1[index] * Constants_1.constants.LENGTH_CROMOSOMA + maxRandom);
             console.log("|" + tipeShape[index] + "| PORCENT = " + pS1[index] + " | CANT = " + cantFig + " | MIN = " + minRandom + " | MAX = " + maxRandom + " | ");
             console.log("------------------------------------------- ");
+            console.log();
             this.pivotInsert.push(maxRandom);
             this.totalShapeZone.push(pS1[Constants_1.constants.POS_TOTAL]);
             this.generatePopulation(cantFig, minRandom, maxRandom, index);
@@ -50,11 +51,10 @@ var genetic = /** @class */ (function () {
         }
     };
     genetic.prototype.makePopulation = function (pZone) {
-        for (var i = 0; Constants_1.constants.PORCENT_APROX <= this.optimalDistance; i++) {
+        while (Constants_1.constants.PORCENT_APROX <= this.optimalDistance) {
             for (var index = 0; Constants_1.constants.POS_TOTAL > index; index++) {
                 this.fitness(pZone, index);
             }
-            this.getDistanceNewPopulation(pZone);
             if (this.getDistanceNewPopulation(pZone) < this.optimalDistance) {
                 this.actualPopulation = Object.assign([], this.newPopulation);
                 this.optimalDistance = this.getDistanceNewPopulation(pZone);
@@ -87,7 +87,7 @@ var genetic = /** @class */ (function () {
         var ponderate = this.model[pZone][pShape] / shapePorcent;
         var numHijos = 0;
         if (ponderate > Constants_1.constants.PONDERATE) {
-            numHijos = (ponderate - 1) * this.actualPopulation[pShape].length;
+            numHijos = (ponderate - Constants_1.constants.PONDERATE) * this.actualPopulation[pShape].length;
         }
         for (var index = 0; index < this.actualPopulation[pShape].length; index++) {
             if (Math.random() <= ponderate) {
@@ -101,14 +101,16 @@ var genetic = /** @class */ (function () {
     };
     genetic.prototype.reproduction = function (pFather, pMother, pPopulation) {
         var random = 0;
+        var mask = 0;
         for (var index = 0; index < pPopulation; index++) {
             var kid;
             random = Math.floor(Math.random() * Constants_1.constants.BITS_CROMOSOMA);
             pFather = pFather >> (random);
             pFather = pFather << (random);
-            pMother = pMother << (Constants_1.constants.BITS_NUMBER - random);
-            pMother = pMother >> (Constants_1.constants.BITS_NUMBER - random);
-            kid = pMother & pFather;
+            mask = pMother >> (random);
+            mask = mask << (random);
+            pMother = pMother ^ pFather;
+            kid = pMother | pFather;
             if ((Math.random() * Constants_1.constants.TOTAL_PORCENT) < Constants_1.constants.MUTATION) {
                 kid = this.mutation(kid);
             }

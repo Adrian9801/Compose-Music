@@ -35,12 +35,24 @@ readFile(process.argv[2]).then((buffer) => {
     var controlador = new controller(audioData1, audioData2);
     audioData1.channelData[constants.CHANNEL1] = new Float32Array(controlador.getNewSong()[constants.CHANNEL1]);
     audioData1.channelData[constants.CHANNEL2] = new Float32Array(controlador.getNewSong()[constants.CHANNEL2]);
-    
+
+  /*  var pFather: number = 63085;//1111011001101101
+    var pMother: number = 63085;
+    var mask: number = 0;
+    var random: number = 9;
+    pFather = pFather >> (random);1111011
+    pFather = pFather << (random);
+
+    console.log(mask = pMother >> (random));
+    console.log(mask = mask << (random));
+    console.log(pMother = pMother ^ mask);
+    console.log(pMother | pFather);*/
+
     console.log("writing...");
     WavEncoder.encode(audioData1).then((buffer: any) => {
       fs.writeFileSync("./GenSong/NewSong.wav", new Buffer(buffer));
     });
 
- });
+  });
 
 });

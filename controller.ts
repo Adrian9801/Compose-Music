@@ -23,7 +23,6 @@ export class controller {
             console.log();
             this.analyceSong.makeShape(pAudioS1.channelData[channel], pAudioS2.channelData[channel]);
             this.genet.setModel(this.analyceSong.getAudioShape2());
-
             
             for (var index: number = 2; index < this.analyceSong.getAudioShape2().length; index++) {
                 console.log( "//////////////// " +index+ " ////////////////");

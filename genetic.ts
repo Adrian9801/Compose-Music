@@ -121,16 +121,18 @@ export class genetic {
     private reproduction(pFather: number, pMother: number, pPopulation: number) {
         var random: number = 0;
         var mask: number = 0;
+        var kidIzq: number = 0;
+        var kidDer: number = 0;
         for (var index = 0; index < pPopulation; index++) {
             var kid: number;
             random = Math.floor(Math.random() * constants.BITS_CROMOSOMA);
-            pFather = pFather >> (random);
-            pFather = pFather << (random);
+            kidIzq = pFather >> (random);
+            kidIzq = kidIzq << (random);
             
             mask = pMother >> (random);
             mask = mask << (random);
-            pMother = pMother ^ pFather;
-            kid = pMother | pFather;
+            kidDer = pMother ^ mask;
+            kid = kidIzq | kidDer;
             if ((Math.random() * constants.TOTAL_PORCENT) < constants.MUTATION) {
                 kid = this.mutation(kid);
             }
